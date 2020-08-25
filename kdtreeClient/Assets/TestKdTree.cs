@@ -129,9 +129,7 @@ public class TestKdTree : MonoBehaviour
                 Debug.LogWarning("please load Sphere first");
                 return;
             }
-            float dis = 0f;
-
-            var item = _mKdList.FindClosest(_mSphere.transform.position, out dis);
+            var item = _mMyKdTree.FindClosest(_mSphere.transform.position);
             item.SetChoosen();
         }
         else if (GUI.Button(new Rect(Screen.width - 150, 600, 150, 150), "reset"))
@@ -143,13 +141,13 @@ public class TestKdTree : MonoBehaviour
             _mSphere = null;
 
 
-            //var list = _mMyKdTree.ToList();
+            var list = _mMyKdTree.ToList();
 
-            //foreach (var item in list)
-            //{
-            //    item.ResetItem();
-            //    _mQueue.Enqueue(item);
-            //}
+            foreach (var item in list)
+            {
+                item.ResetItem();
+                _mQueue.Enqueue(item);
+            }
             _mMyKdTree.Clear();
         }
     }

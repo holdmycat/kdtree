@@ -11,10 +11,9 @@ public class KdTree<T> : IEnumerable<T>, IEnumerable where T : Component
     protected int _count;
     protected bool _just2D;
     protected float _LastUpdate = -1f;
-    protected KdNode[] _open;
-
+    
     public int Count { get { return _count; } }
-    public bool IsReadOnly { get { return false; } }
+  
     public float AverageSearchLength { protected set; get; }
     public float AverageSearchDeep { protected set; get; }
 
@@ -142,8 +141,6 @@ public class KdTree<T> : IEnumerable<T>, IEnumerable where T : Component
     /// </summary>
     public void Clear()
     {
-
-
         //rest for the garbage collection
         _root = null;
         _last = null;
@@ -332,55 +329,38 @@ public class KdTree<T> : IEnumerable<T>, IEnumerable where T : Component
         //var nearestDist = float.MaxValue;
         KdNode nearest = null;
 
-        if (_open == null || _open.Length < Count)
-            _open = new KdNode[Count];
-        for (int i = 0; i < _open.Length; i++)
-            _open[i] = null;
-
-        var openAdd = 0;
-        var openCur = 0;
-
-        if (_root != null)
-            _open[openAdd++] = _root;
-
-        while (openCur < _open.Length && _open[openCur] != null)
+        KdNode _current = _root;
+        while(_current != null)
         {
-            var current = _open[openCur++];
-            if (traversed != null)
-                traversed.Add(current.component);
-
-            var nodeDist = _distance(position, current.component.transform.position);
+            var nodeDist = _distance(position, _current.component.transform.position);
             if (nodeDist < nearestDist)
             {
                 nearestDist = nodeDist;
-                nearest = current;
+                nearest = _current;
             }
 
-            var splitCurrent = _getSplitValue(current);
-            var splitSearch = _getSplitValue(current.level, position);
+            var splitCurrent = _getSplitValue(_current);
+            var splitSearch = _getSplitValue(_current.level, position);
 
             if (splitSearch < splitCurrent)
             {
-                if (current.left != null)
-                    _open[openAdd++] = current.left; //go left
-                if (Mathf.Abs(splitCurrent - splitSearch) * Mathf.Abs(splitCurrent - splitSearch) < nearestDist && current.right != null)
-                    _open[openAdd++] = current.right; //go right
+                _current = _current.left;
             }
             else
             {
-                if (current.right != null)
-                    _open[openAdd++] = current.right; //go right
-                if (Mathf.Abs(splitCurrent - splitSearch) * Mathf.Abs(splitCurrent - splitSearch) < nearestDist && current.left != null)
-                    _open[openAdd++] = current.left; //go left
+                _current = _current.right;
             }
         }
+
         if (null == nearest)
             return null;
 
-        AverageSearchLength = (99f * AverageSearchLength + openCur) / 100f;
-        AverageSearchDeep = (99f * AverageSearchDeep + nearest.level) / 100f;
+        //AverageSearchLength = (99f * AverageSearchLength + openCur) / 100f;
+        //AverageSearchDeep = (99f * AverageSearchDeep + nearest.level) / 100f;
 
         return nearest.component;
+
+    
     }
 
     private float _getSplitValue(KdNode node)

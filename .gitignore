@@ -1,3 +1,7 @@
 kdtreeClient/Library/
 kdtreeClient/Temp/
 kdtreeClient/Logs/
+kdtreeClient/.vs
+kdtreeClient/obj
+kdtreeClient/Assembly-CSharp.csproj
+kdtreeClient/kdtreeClient.sln

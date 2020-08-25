@@ -17,6 +17,12 @@ public class CubeBehaviour : MonoBehaviour
         //lineRender = GetComponent<LineRenderer>();
     }
 
+
+    public void SetChoosen()
+    {
+        Mat.SetColor("_Color", Color.green);
+    }
+
    public void SetParent()
    {
         // lineRender.SetPositions(new Vector3[] { transform.position, point});
@@ -33,4 +39,12 @@ public class CubeBehaviour : MonoBehaviour
         lineRightRender.SetPositions(new Vector3[] { transform.position, point });
    }
 
+    public void ResetItem()
+    {
+        lineLeftRender.materials[0].SetColor("_Color", Color.white);
+        lineRightRender.materials[0].SetColor("_Color", Color.white);
+        lineRightRender.SetPositions(new Vector3[] { Vector3.zero, Vector3.zero });
+        lineLeftRender.SetPositions(new Vector3[] { Vector3.zero, Vector3.zero });
+        Mat.SetColor("_Color", Color.white);
+    }
 }
